@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Glucoprincesa</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 540px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 24px 24px 24px;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      border: 1px solid #e3e8ee;
+    }
+    .glucoprincesa-title {
+      text-align: center;
+      font-size: 2.7em;
+      font-weight: 900;
+      color: #ff3cac;
+      text-shadow: 0 2px 12px #ffb5e0, 0 1px 0 #fff;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tab {
+      flex: 1;
+      padding: 14px 0;
+      cursor: pointer;
+      background: #f3f7fa;
+      text-align: center;
+      color: #555;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      border-right: 1px solid #e3e8ee;
+      user-select: none;
+    }
+    .tab:last-child { border-right: none; }
+    .tab.active {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(67, 206, 162, 0.12);
+    }
+    .hidden { display: none; }
+    label {
+      display: block;
+      margin-top: 16px;
+      color: #185a9d;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #b2bec3;
+      background: #f8fafc;
+      font-size: 1em;
+      transition: border 0.2s;
+      box-sizing: border-box;
+    }
+    input[type="number"]:focus, select:focus {
+      border: 1.5px solid #43cea2;
+      outline: none;
+      background: #eafaf1;
+    }
+    button {
+      margin-top: 24px;
+      padding: 12px 0;
+      width: 100%;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(67, 206, 162, 0.11);
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .result {
+      margin-top: 24px;
+      font-size: 1.25em;
+      color: #00796b;
+      background: #eafaf1;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(67, 206, 162, 0.06);
+      text-align: center;
+      min-height: 32px;
+    }
+    .config-section {
+      background: #f3f7fa;
+      border-radius: 14px;
+      padding: 16px 14px 8px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 6px rgba(31, 38, 135, 0.07);
+      border: 1px solid #e3e8ee;
+    }
+    .config-section h4 {
+      margin-top: 0;
+      color: #185a9d;
+      font-size: 1.07em;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    table {
+      width: 100%;
+      margin-top: 12px;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #f8fafc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(31, 38, 135, 0.06);
+    }
+    th, td {
+      border-bottom: 1px solid #e3e8ee;
+      padding: 8px;
+      text-align: center;
+      color: #185a9d;
+      font-size: 1em;
+    }
+    th {
+      background: #e0eafc;
+      font-weight: 600;
+    }
+    tr:last-child td { border-bottom: none; }
+    @media (max-width: 600px) {
+      .container { padding: 10px 2vw; }
+      .tabs { flex-direction: column; }
+      .tab { border-right: none; border-bottom: 1px solid #e3e8ee; }
+      .tab:last-child { border-bottom: none; }
+      .glucoprincesa-title { font-size: 2em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="glucoprincesa-title">Glucoprincesa</div>
+    <div class="tabs">
+      <div class="tab active" id="tabCarbs">Bolo por Hidratos</div>
+      <div class="tab" id="tabCorrector">Correctora Simple</div>
+      <div class="tab" id="tabBasal">Insulina Basal</div>
+    </div>
+
+    <!-- Configuración de ratios (solo hidratos) -->
+    <div class="config-section" id="configRatios">
+      <h4>Ratios de insulina por hidratos</h4>
+      <label>Ratio desayuno (g/U):</label>
+      <input type="number" id="ratioDesayuno" step="0.01" value="10">
+      <label>Ratio comida (g/U):</label>
+      <input type="number" id="ratioComida" step="0.01" value="12">
+      <label>Ratio merienda (g/U):</label>
+      <input type="number" id="ratioMerienda" step="0.01" value="15">
+      <label>Ratio cena (g/U):</label>
+      <input type="number" id="ratioCena" step="0.01" value="12">
+    </div>
+    <!-- Configuración de bolos fijos (solo correctora) -->
+    <div class="config-section hidden" id="configBolosFijos">
+      <h4>Bolos fijos por comida</h4>
+      <label>Bolo fijo desayuno:</label>
+      <input type="number" id="boloDesayuno" step="0.01" value="0">
+      <label>Bolo fijo comida:</label>
+      <input type="number" id="boloComida" step="0.01" value="0">
+      <label>Bolo fijo merienda:</label>
+      <input type="number" id="boloMerienda" step="0.01" value="0">
+      <label>Bolo fijo cena:</label>
+      <input type="number" id="boloCena" step="0.01" value="0">
+    </div>
+
+    <!-- Bolo por hidratos (sin bolos fijos) -->
+    <form id="bolusFormCarbs">
+      <label for="mealCarbs">Comida:</label>
+      <select id="mealCarbs">
+        <option value="desayuno">Desayuno</option>
+        <option value="comida">Comida</option>
+        <option value="merienda">Merienda</option>
+        <option value="cena">Cena</option>
+      </select>
+      <label for="carbs">Carbohidratos (g):</label>
+      <input type="number" id="carbs" required>
+      <label for="glucose">Glucemia actual (mg/dL):</label>
+      <input type="number" id="glucose" required>
+      <label for="targetCarbs">Glucemia objetivo antes de la comida (mg/dL):</label>
+      <input type="number" id="targetCarbs" required>
+      <label for="correction">Factor de corrección:</label>
+      <input type="number" id="correction" step="0.01" required>
+      <button type="submit">Calcular Bolo</button>
+    </form>
+    <div class="result" id="resultCarbs"></div>
+
+    <!-- Correctora simple (solo bolos fijos, sin ratios de hidratos) -->
+    <form id="bolusFormCorrector" class="hidden">
+      <label for="mealCorrector">Comida:</label>
+      <select id="mealCorrector">
+        <option value="desayuno">Desayuno</option>
+        <option value="comida">Comida</option>
+        <option value="merienda">Merienda</option>
+        <option value="cena">Cena</option>
+      </select>
+      <label for="glucoseC">Glucemia actual (mg/dL):</label>
+      <input type="number" id="glucoseC" required>
+      <label for="targetC">Glucemia objetivo antes de la comida (mg/dL):</label>
+      <input type="number" id="targetC" required>
+      <label for="correctionC">Factor de sensibilidad:</label>
+      <input type="number" id="correctionC" step="0.01" required>
+      <label for="boloFijoCorrector">Bolo fijo para esta comida:</label>
+      <input type="number" id="boloFijoCorrector" step="0.01" value="0" readonly>
+      <button type="submit">Calcular Bolo Corrector</button>
+    </form>
+    <div class="result hidden" id="resultCorrector"></div>
+
+    <!-- Insulina basal (ajuste personalizable) -->
+    <div id="basalSection" class="hidden">
+      <h4>Ajuste de Insulina Basal</h4>
+      <label>Dosis actual de insulina basal (U):</label>
+      <input type="number" id="basalCurrent" step="0.1" value="10">
+      <label>Valor de ajuste (unidades):</label>
+      <input type="number" id="ajusteBasal" step="0.1" value="2">
+      <label>Objetivo mínimo en ayunas (mg/dL):</label>
+      <input type="number" id="targetMin" value="120">
+      <label>Objetivo máximo en ayunas (mg/dL):</label>
+      <input type="number" id="targetMax" value="180">
+      <table>
+        <tr>
+          <th>Día</th>
+          <th>Glucemia en ayunas (mg/dL)</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td><input type="number" id="glucoseF1"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" id="glucoseF2"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" id="glucoseF3"></td>
+        </tr>
+      </table>
+      <button id="calcBasalBtn">Calcular Ajuste Basal</button>
+      <button id="resetBasalBtn" type="button">Resetear glucemias</button>
+      <div class="result" id="resultBasal"></div>
+    </div>
+  </div>
+
+  <script>
+    // Tabs y configuración dinámica
+    function showSection(section) {
+      document.getElementById('bolusFormCarbs').classList.add('hidden');
+      document.getElementById('resultCarbs').classList.add('hidden');
+      document.getElementById('bolusFormCorrector').classList.add('hidden');
+      document.getElementById('resultCorrector').classList.add('hidden');
+      document.getElementById('basalSection').classList.add('hidden');
+      document.getElementById('configRatios').classList.add('hidden');
+      document.getElementById('configBolosFijos').classList.add('hidden');
+      if (section === 'carbs') {
+        document.getElementById('bolusFormCarbs').classList.remove('hidden');
+        document.getElementById('resultCarbs').classList.remove('hidden');
+        document.getElementById('configRatios').classList.remove('hidden');
+      } else if (section === 'corrector') {
+        document.getElementById('bolusFormCorrector').classList.remove('hidden');
+        document.getElementById('resultCorrector').classList.remove('hidden');
+        document.getElementById('configBolosFijos').classList.remove('hidden');
+      } else if (section === 'basal') {
+        document.getElementById('basalSection').classList.remove('hidden');
+      }
+    }
+    document.getElementById('tabCarbs').onclick = function() {
+      this.classList.add('active');
+      document.getElementById('tabCorrector').classList.remove('active');
+      document.getElementById('tabBasal').classList.remove('active');
+      showSection('carbs');
+    };
+    document.getElementById('tabCorrector').onclick = function() {
+      this.classList.add('active');
+      document.getElementById('tabCarbs').classList.remove('active');
+      document.getElementById('tabBasal').classList.remove('active');
+      showSection('corrector');
+    };
+    document.getElementById('tabBasal').onclick = function() {
+      this.classList.add('active');
+      document.getElementById('tabCarbs').classList.remove('active');
+      document.getElementById('tabCorrector').classList.remove('active');
+      showSection('basal');
+    };
+
+    // Ratios por comida para hidratos
+    function getRatio(meal) {
+      switch(meal) {
+        case 'desayuno': return parseFloat(document.getElementById('ratioDesayuno').value);
+        case 'comida': return parseFloat(document.getElementById('ratioComida').value);
+        case 'merienda': return parseFloat(document.getElementById('ratioMerienda').value);
+        case 'cena': return parseFloat(document.getElementById('ratioCena').value);
+        default: return 10;
+      }
+    }
+    // Bolos fijos por comida para correctora simple
+    function getBoloFijo(meal) {
+      switch(meal) {
+        case 'desayuno': return parseFloat(document.getElementById('boloDesayuno').value);
+        case 'comida': return parseFloat(document.getElementById('boloComida').value);
+        case 'merienda': return parseFloat(document.getElementById('boloMerienda').value);
+        case 'cena': return parseFloat(document.getElementById('boloCena').value);
+        default: return 0;
+      }
+    }
+
+    // Bolo por hidratos (sin bolos fijos, redondeo a la unidad)
+    document.getElementById('bolusFormCarbs').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const meal = document.getElementById('mealCarbs').value;
+      const carbs = parseFloat(document.getElementById('carbs').value);
+      const ratio = getRatio(meal);
+      const glucose = parseFloat(document.getElementById('glucose').value);
+      const target = parseFloat(document.getElementById('targetCarbs').value);
+      const correction = parseFloat(document.getElementById('correction').value);
+
+      const boloComida = carbs / ratio;
+      const boloCorreccion = (glucose - target) / correction;
+      const boloTotal = boloComida + boloCorreccion;
+      const boloRedondeado = Math.round(boloTotal);
+
+      document.getElementById('resultCarbs').innerText =
+        `Bolo recomendado: ${boloRedondeado} unidades de insulina`;
+    });
+
+    // Correctora simple (solo bolos fijos, sin ratios de hidratos, redondeo a la unidad)
+    document.getElementById('mealCorrector').onchange = function() {
+      const meal = this.value;
+      document.getElementById('boloFijoCorrector').value = getBoloFijo(meal);
+    };
+    document.getElementById('boloFijoCorrector').value = getBoloFijo(document.getElementById('mealCorrector').value);
+
+    document.getElementById('bolusFormCorrector').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const meal = document.getElementById('mealCorrector').value;
+      const glucose = parseFloat(document.getElementById('glucoseC').value);
+      const target = parseFloat(document.getElementById('targetC').value);
+      const correction = parseFloat(document.getElementById('correctionC').value);
+      const boloFijo = getBoloFijo(meal);
+
+      const boloCorrector = (glucose - target) / correction;
+      const boloTotal = boloCorrector + boloFijo;
+      const boloRedondeado = Math.round(boloTotal);
+
+      document.getElementById('resultCorrector').innerText =
+        `Bolo total recomendado: ${boloRedondeado} unidades de insulina (incluye bolo fijo de ${boloFijo.toFixed(2)} U)`;
+    });
+
+    // Basal: lógica de ajuste y reseteo con ajuste personalizable y redondeo a la unidad
+    function resetBasalTable() {
+      document.getElementById('glucoseF1').value = '';
+      document.getElementById('glucoseF2').value = '';
+      document.getElementById('glucoseF3').value = '';
+    }
+
+    document.getElementById('calcBasalBtn').onclick = function() {
+      const glucemias = [
+        parseFloat(document.getElementById('glucoseF1').value),
+        parseFloat(document.getElementById('glucoseF2').value),
+        parseFloat(document.getElementById('glucoseF3').value)
+      ];
+      const dosisActual = parseFloat(document.getElementById('basalCurrent').value);
+      const ajuste = parseFloat(document.getElementById('ajusteBasal').value);
+      const objetivoMin = parseFloat(document.getElementById('targetMin').value);
+      const objetivoMax = parseFloat(document.getElementById('targetMax').value);
+
+      let nuevaDosis = dosisActual;
+      let mensaje = 'No se requiere ajuste de dosis.';
+
+      const mayoresMax = glucemias.filter(g => g > objetivoMax).length;
+      const menoresMin = glucemias.filter(g => g < objetivoMin).length;
+      const menores70 = glucemias.filter(g => g < 70).length;
+
+      if (mayoresMax === 3) {
+        nuevaDosis += ajuste;
+        resetBasalTable();
+        mensaje = `Tres valores >${objetivoMax}. Sube la dosis a ${Math.round(nuevaDosis)} U. Tabla reseteada.`;
+      } else if (menoresMin >= 2) {
+        nuevaDosis -= ajuste;
+        resetBasalTable();
+        mensaje = `Dos valores <${objetivoMin}. Baja la dosis a ${Math.round(nuevaDosis)} U. Tabla reseteada.`;
+      } else if (menores70 >= 1) {
+        nuevaDosis -= ajuste;
+        resetBasalTable();
+        mensaje = `Un valor <70 mg/dL. Baja la dosis a ${Math.round(nuevaDosis)} U. Tabla reseteada.`;
+      }
+
+      document.getElementById('basalCurrent').value = Math.round(nuevaDosis);
+      document.getElementById('resultBasal').innerText = mensaje;
+    };
+
+    document.getElementById('resetBasalBtn').onclick = resetBasalTable;
+
+    // Inicialización
+    showSection('carbs');
+  </script>
+</body>
+</html>
